@@ -23,9 +23,9 @@ The system utilizes a hybrid deployment architecture:
            ▼
   [ Docker Compose Stack ] 
            │
-           ├─ FastAPI (REST API & Inference on Port xxxx)
-           ├─ Prometheus (Metrics Scraper on Port 9090)
-           └─ Grafana (Visual Dashboard on Port 3000)
+           ├─ FastAPI (REST API & Inference)
+           ├─ Prometheus (Metrics Scraper)
+           └─ Grafana (Visual Dashboard)
 ```
 
 ## Core Components
