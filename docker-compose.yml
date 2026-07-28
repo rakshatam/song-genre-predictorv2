@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  song-genre-api:
+    build: .
+    container_name: genre-predictor
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
