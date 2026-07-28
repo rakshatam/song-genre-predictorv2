@@ -51,7 +51,7 @@ The system utilizes a hybrid deployment architecture:
 
 ### 5. Kubernetes Scaling (Infrastructure-as-Code)
 - The repository includes production-ready Kubernetes manifests (`k8s/`) including a `Deployment`, `LoadBalancer Service`, and a `HorizontalPodAutoscaler` (HPA).
-- *Note: We intentionally rely on `docker-compose` for the local environment because running a full local Kubernetes node (like Minikube) alongside the PyTorch model exceeds typical consumer hardware RAM limits. The `k8s/` files are provided specifically for cloud migration.*
+- *Note: We intentionally rely on `docker-compose` for the local environment because running a full local Kubernetes node (like Minikube) alongside the PyTorch model exceeds typical consumer hardware RAM limits. The `k8s/` files are provided specifically for cloud migration and for security purposes k8s/ are not available in the repos.*
 
 ## Workflow
 
