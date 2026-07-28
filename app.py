@@ -32,7 +32,7 @@ def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
         )
     return credentials.username
 
-# Critical for Hybrid Architecture: Allows your Cloudflare frontend to talk to your local API!
+# Critical for Hybrid Architecture: Allows your Cloudflare frontend to talk to local API!
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -148,4 +148,4 @@ async def predict_genre(file: UploadFile = File(...), username: str = Depends(ge
             except: pass
 
 if __name__ == "__main__":
-    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=False)
+    uvicorn.run("app:app", host="x.x.x.x", port=xxxx, reload=False)
