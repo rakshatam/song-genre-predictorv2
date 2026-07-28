@@ -62,6 +62,7 @@ The system utilizes a hybrid deployment architecture:
 5. **Inference**: The audio is loaded into memory, chunked into 10.24s segments, and passed through the AST feature extractor and PyTorch model.
 6. **Aggregation**: The predictions for each chunk are aggregated, filtered against the AudioSet ontology blocklist, and the top 5 genres are returned to the client as JSON.
 7. **Cleanup**: Temporary files are deleted from the container.
+8. **Usage**: A dedicated wslconfig was made to make sure the CPU and RAM constraints are met
 
 ## Local Setup
 
