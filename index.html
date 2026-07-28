@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Genre Predictor</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 2rem; background-color: #f5f5f5; color: #333; }
+        .card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; margin-bottom: 2rem; }
+        button { background-color: #0070f3; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; transition: background-color 0.2s; }
+        button:hover { background-color: #0051b3; }
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
+        pre { text-align: left; background: #282c34; color: #abb2bf; padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 14px; }
+        .file-upload { display: flex; flex-direction: column; gap: 1rem; align-items: center; }
+        input[type="file"] { padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="card file-upload">
+        <h1>🎵 Song Genre Predictor</h1>
+        <p>Upload an existing MP4, MP3, or WAV file to predict its genre.</p>
+        <input type="file" id="fileInput" accept="video/mp4,audio/*">
+        <button id="uploadBtn">Upload & Predict</button>
+    </div>
+
+    <div class="card" id="resultsCard" style="display: none;">
+        <h2>Prediction Results</h2>
+        <pre id="resultsPre"></pre>
+    </div>
+
+    <script>
+        const uploadBtn = document.getElementById('uploadBtn');
+        const fileInput = document.getElementById('fileInput');
+        
+        // Your active Tunnel URL!
+        const API_URL = "https://xxxxx"; 
+        
+        uploadBtn.addEventListener('click', async () => {
+            if (!fileInput.files[0]) {
+                alert("Please select a file first.");
+                return;
+            }
+
+            // Secure Password Gate
+            const password = prompt("Enter the Secret Access Password:");
+            if (!password) return;
+            
+            // Encode credentials for Basic Auth 
+            const encodedCredentials = btoa('xxxxx:' + password);
+            
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = "Uploading & Predicting...";
+            
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+            
+            try {
+                // If they run it locally before the tunnel
+                const targetUrl = API_URL.includes("YOUR-TUNNEL-URL") ? "http://xxxxx:xxxxx/predict" : `${API_URL}/predict`;
+                
+                const response = await fetch(targetUrl, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Authorization': `Basic ${encodedCredentials}`,
+                        'ngrok-skip-browser-warning': 'true'
+                    }
+                });
+                
+                if (response.status === 401) {
+                    throw new Error("Incorrect Password! Access Denied.");
+                }
+                
+                if (!response.ok) {
+                    throw new Error(`Server Error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                document.getElementById('resultsCard').style.display = 'block';
+                document.getElementById('resultsPre').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                alert("Error: " + error.message);
+            } finally {
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = "Upload & Predict";
+            }
+        });
+    </script>
+</body>
+</html>
