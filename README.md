@@ -6,6 +6,7 @@ This repository contains the backend and frontend components for a machine learn
 
 The system utilizes a hybrid deployment architecture:
 
+```text
     [ Client Browser ]
            │
            ▼
