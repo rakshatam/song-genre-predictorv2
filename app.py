@@ -13,17 +13,21 @@ from collections import Counter
 from transformers import ASTFeatureExtractor, ASTForAudioClassification
 from moviepy import VideoFileClip
 import logging
+from prometheus_fastapi_instrumentator import Instrumentator
 
 logging.getLogger("moviepy").setLevel(logging.ERROR)
 
 app = FastAPI(title="Song Genre Prediction API", version="1.0")
 
+# Instrument the FastAPI app for Prometheus Metrics
+Instrumentator().instrument(app).expose(app)
+
 security = HTTPBasic()
 
 def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
     # You can change this username and password later!
-    correct_username = secrets.compare_digest(credentials.username, "admin")
-    correct_password = secrets.compare_digest(credentials.password, "xxxxxxxx")
+    correct_username = secrets.compare_digest(credentials.username, "xxxxx")
+    correct_password = secrets.compare_digest(credentials.password, "xxxxx")
     if not (correct_username and correct_password):
         raise HTTPException(
             status_code=401,
@@ -32,7 +36,7 @@ def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
         )
     return credentials.username
 
-# Critical for Hybrid Architecture: Allows your Cloudflare frontend to talk to local API!
+# Critical for Hybrid Architecture: Allows your Cloudflare frontend to talk to your local API!
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -53,7 +57,8 @@ def load_model():
     print(f"Starting up. Using device: {device}")
     model_name = "MIT/ast-finetuned-audioset-10-10-0.4593"
     
-    local_cache_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "model_cache")
+    # Path replaced with placeholder 
+    local_cache_dir = "xxxxx/xxxxx"
     print(f"Loading AST model {model_name} into memory from {local_cache_dir}...")
     
     feature_extractor = ASTFeatureExtractor.from_pretrained(model_name, cache_dir=local_cache_dir)
@@ -128,7 +133,7 @@ async def predict_genre(file: UploadFile = File(...), username: str = Depends(ge
                     all_predictions.extend(tags)
                 except Exception as e:
                     print(f"Chunk error: {e}")
-                
+            
         if not all_predictions:
             raise HTTPException(status_code=400, detail="Could not process audio.")
             
@@ -148,4 +153,4 @@ async def predict_genre(file: UploadFile = File(...), username: str = Depends(ge
             except: pass
 
 if __name__ == "__main__":
-    uvicorn.run("app:app", host="x.x.x.x", port=xxxx, reload=False)
+    uvicorn.run("app:app", host="xxxxx", port=xxxxx, reload=False)
