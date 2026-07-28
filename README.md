@@ -6,7 +6,6 @@ This repository contains the backend and frontend components for a machine learn
 
 The system utilizes a hybrid deployment architecture:
 
-```text
     [ Client Browser ]
            │
            ▼
@@ -21,13 +20,11 @@ The system utilizes a hybrid deployment architecture:
 [ Local Host Environment ]
            │
            ▼
-  [ Docker Container ] ──(Port xxxx)
+  [ Docker Compose Stack ] 
            │
-           ├─ FastAPI (REST API & Auth)
-           │
-           ├─ Librosa (Audio Processing)
-           │
-           └─ PyTorch AST Model (Inference)
+           ├─ FastAPI (REST API & Inference on Port xxxx)
+           ├─ Prometheus (Metrics Scraper on Port 9090)
+           └─ Grafana (Visual Dashboard on Port 3000)
 ```
 
 ## Core Components
@@ -46,6 +43,14 @@ The system utilizes a hybrid deployment architecture:
 - A lightweight, static HTML/JS interface hosted on Cloudflare Pages.
 - Handles user authentication and multipart/form-data file uploads.
 - Communicates with the backend API via dynamic tunneling URLs.
+
+### 4. Monitoring Stack (Local Observability)
+- **Prometheus**: Automatically scrapes the `/metrics` endpoint on the FastAPI backend every 5 seconds to track CPU usage, prediction latency, and error rates.
+- **Grafana**: Visualizes the Prometheus metrics on a live dashboard running locally.
+
+### 5. Kubernetes Scaling (Infrastructure-as-Code)
+- The repository includes production-ready Kubernetes manifests (`k8s/`) including a `Deployment`, `LoadBalancer Service`, and a `HorizontalPodAutoscaler` (HPA).
+- *Note: We intentionally rely on `docker-compose` for the local environment because running a full local Kubernetes node (like Minikube) alongside the PyTorch model exceeds typical consumer hardware RAM limits. The `k8s/` files are provided specifically for cloud migration.*
 
 ## Workflow
 
