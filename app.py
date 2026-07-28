@@ -23,7 +23,7 @@ security = HTTPBasic()
 def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
     # You can change this username and password later!
     correct_username = secrets.compare_digest(credentials.username, "admin")
-    correct_password = secrets.compare_digest(credentials.password, "secret123")
+    correct_password = secrets.compare_digest(credentials.password, "xxxxxxxx")
     if not (correct_username and correct_password):
         raise HTTPException(
             status_code=401,
