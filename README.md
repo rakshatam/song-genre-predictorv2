@@ -76,4 +76,4 @@ The backend is completely containerized. Start the server using:
 ```bash
 docker-compose up -d --build
 ```
-Ensure your edge tunnel is configured to point to the designated local port (the ports and others are pointed as 'xxxx' please change accordingly to your designated port made in code files and docker and Prometheus and docker files).
+Ensure your edge tunnel is configured to point to the designated local port (the ports and others are pointed as 'xxxx' please change accordingly to your designated port made in code , docker, Prometheus and index and docker files).
