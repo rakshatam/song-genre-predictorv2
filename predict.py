@@ -49,7 +49,10 @@ def predict_genre(input_file):
     print(f"Using device: {device} (Forced for testing)")
 
     model_name = "MIT/ast-finetuned-audioset-10-10-0.4593"
-    local_cache_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "model_cache")
+    
+    # Path replaced with placeholder
+    local_cache_dir = "xxxxx/xxxxx"
+    
     print(f"Loading AST model {model_name} (527 classes)...")
     print(f"Model cache directory: {local_cache_dir}")
     
