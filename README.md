@@ -10,11 +10,11 @@ The system utilizes a hybrid deployment architecture:
     [ Client Browser ]
            │
            ▼
-[ Cloudflare Pages (Frontend) ] ──(Static HTML/JS/CSS)
+[ Cloudflare Pages (Frontend) ] ──(Next.js Static Export / React)
            │
            │ (HTTPS / Fetch API)
            ▼
-    [ Ngrok Edge Network ] ──(Bypasses NAT/Firewalls)
+    [ Ngrok Edge Network ] 
            │
            │ (Reverse Proxy Tunnel)
            ▼
@@ -23,9 +23,9 @@ The system utilizes a hybrid deployment architecture:
            ▼
   [ Docker Compose Stack ] 
            │
-           ├─ FastAPI (REST API & Inference)
-           ├─ Prometheus (Metrics Scraper)
-           └─ Grafana (Visual Dashboard)
+           ├─ FastAPI (REST API & Inference on Port xxxx)
+           ├─ Prometheus (Metrics Scraper on Port 9090)
+           └─ Grafana (Visual Dashboard on Port 3001)
 ```
 
 ## Core Components
@@ -37,21 +37,22 @@ The system utilizes a hybrid deployment architecture:
 
 ### 2. FastAPI (API Layer)
 - Provides a RESTful POST endpoint (`/predict`) to handle file uploads.
-- Implements HTTP Basic Authentication.
+- Implements HTTP Basic Authentication using enterprise-grade `bcrypt` password hashing.
 - Configured with strict CORS middleware to accept requests exclusively from the designated Cloudflare Pages frontend.
 
 ### 3. Static Frontend (Edge)
-- A lightweight, static HTML/JS interface hosted on Cloudflare Pages.
-- Handles user authentication and multipart/form-data file uploads.
+- A dynamic, interactive Next.js (React) application compiled to static HTML/JS via `output: 'export'`.
+- Hosted globally on Cloudflare Pages.
+- Features a premium Glassmorphism UI, drag-and-drop file uploads, and animated confidence bars.
 - Communicates with the backend API via dynamic tunneling URLs.
 
 ### 4. Monitoring Stack (Local Observability)
 - **Prometheus**: Automatically scrapes the `/metrics` endpoint on the FastAPI backend every 5 seconds to track CPU usage, prediction latency, and error rates.
-- **Grafana**: Visualizes the Prometheus metrics on a live dashboard running locally.
+- **Grafana**: Visualizes the Prometheus metrics on a live dashboard running locally on port 3001.
 
 ### 5. Kubernetes Scaling (Infrastructure-as-Code)
-- The repository includes production-ready Kubernetes manifests (`k8s/`) including a `Deployment`, `LoadBalancer Service`, and a `HorizontalPodAutoscaler` (HPA).
-- *Note: We intentionally rely on `docker-compose` for the local environment because running a full local Kubernetes node (like Minikube) alongside the PyTorch model exceeds typical consumer hardware RAM limits. The `k8s/` files are provided specifically for cloud migration and for security purposes k8s/ are not available in the repos.*
+- The repository does not include production-ready Kubernetes manifests (`k8s/`) including a `Deployment`, `LoadBalancer Service`, and a `HorizontalPodAutoscaler` (HPA).
+- *Note: We intentionally rely on `docker-compose` for the local environment because running a full local Kubernetes node (like Minikube) alongside the PyTorch model exceeds typical consumer hardware RAM limits. The `k8s/` files are  specifically for cloud migration and not in the repository due to security reasons.*
 
 ## Workflow
 
@@ -62,7 +63,6 @@ The system utilizes a hybrid deployment architecture:
 5. **Inference**: The audio is loaded into memory, chunked into 10.24s segments, and passed through the AST feature extractor and PyTorch model.
 6. **Aggregation**: The predictions for each chunk are aggregated, filtered against the AudioSet ontology blocklist, and the top 5 genres are returned to the client as JSON.
 7. **Cleanup**: Temporary files are deleted from the container.
-8. **Usage**: A dedicated wslconfig was made to make sure the CPU and RAM constraints are met
 
 ## Local Setup
 
@@ -76,4 +76,6 @@ The backend is completely containerized. Start the server using:
 ```bash
 docker-compose up -d --build
 ```
-Ensure your edge tunnel is configured to point to the designated local port (the ports and others are pointed as 'xxxx' please change accordingly to your designated port made in code , docker, Prometheus and index and docker files).
+Ensure your edge tunnel is configured to point to the designated local port as ports and other information are marked as xxxx in code files
+docker system prune -a -f --volumes
+```
